@@ -1,0 +1,27 @@
+{
+    "extends": "../../tsconfig.build.json",
+    "compilerOptions": {
+      "moduleResolution": "node",
+      "lib": ["esnext"],
+      "noUnusedLocals": false,
+      "noUnusedParameters": false,
+      "sourceMap": true,
+      "target": "es2018",
+      "outDir": "lib",
+      "allowJs": true,
+      "skipLibCheck": true,
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "forceConsistentCasingInFileNames": true,
+      "module": "esnext",
+      "resolveJsonModule": true,
+      "baseUrl": "src",
+      "experimentalDecorators": true
+    },
+    "include": [
+      "src/**/*.ts",
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }

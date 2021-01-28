@@ -1,0 +1,10 @@
+{
+	"exclude": ["node_modules"],
+	"compilerOptions": {
+		"skipLibCheck": true,
+		"baseUrl": ".",
+		"paths": {
+		  "@drivery/*": ["packages/*/src"]
+		}
+	}
+}
