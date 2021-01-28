@@ -1,0 +1,21 @@
+{
+    "name": "tietokantasovellus-mono",
+    "private": true,
+    "scripts": {
+      "bootstrap": "lerna bootstrap --use-workspaces",
+      "story": "lerna run story --stream",
+      "prestart": "lerna run libbuild --stream",
+      "start": "lerna run start --stream",
+      "pretest": "lerna run libbuild --stream",
+      "test": "lerna run test --stream",
+      "libbuild": "lerna run libbuild"
+    },
+    "devDependencies": {
+      "lerna": "^3.22.1",
+      "typescript": "^4.1.2"
+    },
+    "workspaces": [
+      "packages/*"
+    ]
+  }
+  
