@@ -1,16 +1,21 @@
 import { Role } from "@drivery/shared";
 import { AuthenticatedUser } from "./AuthenticatedUser";
+import { MissingRoleError } from './errors/MissingRoleError';
 
 export interface ProtectedMethodOptions<Response = any> {
     roles?: Role[];
     requestHook? (user: AuthenticatedUser, ...args): boolean;
     responseHook? (user: AuthenticatedUser, response: Response): boolean;
+    RequestHookError?: ErrorConstructor;
+    ResponseHookError?: ErrorConstructor;
 }
 
 export const protectedMethod = ({
     roles = [],
     requestHook,
     responseHook,
+    RequestHookError = Error,
+    ResponseHookError = Error,
 }: ProtectedMethodOptions = {}) => {
     return (_target: any, _key: any, descriptor: PropertyDescriptor) => {    
         const method = descriptor.value;
@@ -26,17 +31,17 @@ export const protectedMethod = ({
             }
 
             if (!roles.some(r => user.hasRole(r))) {
-                throw new Error('Missing required role');
+                throw new MissingRoleError();
             }
 
             if (requestHook && !requestHook(user, ...arguments)) {
-                throw new Error('Custom function authorize failed');
+                throw new RequestHookError();
             }
 
             const response = await method.apply(this, arguments);
 
             if (responseHook && !responseHook(user, response)) {
-                throw new Error('Custom function authorize failed');
+                throw new ResponseHookError();
             }
 
             return response;
