@@ -6,16 +6,16 @@ export interface ProtectedMethodOptions<Response = any> {
     roles?: Role[];
     requestHook? (user: AuthenticatedUser, ...args): boolean;
     responseHook? (user: AuthenticatedUser, response: Response): boolean;
-    RequestHookError?: ErrorConstructor;
-    ResponseHookError?: ErrorConstructor;
+    requestHookError?(): Error;
+    responseHookError? (): Error;
 }
 
 export const protectedMethod = ({
     roles = [],
     requestHook,
     responseHook,
-    RequestHookError = Error,
-    ResponseHookError = Error,
+    requestHookError = () => new Error(),
+    responseHookError = () => new Error(),
 }: ProtectedMethodOptions = {}) => {
     return (_target: any, _key: any, descriptor: PropertyDescriptor) => {    
         const method = descriptor.value;
@@ -35,13 +35,13 @@ export const protectedMethod = ({
             }
 
             if (requestHook && !requestHook(user, ...arguments)) {
-                throw new RequestHookError();
+                throw requestHookError();
             }
 
             const response = await method.apply(this, arguments);
 
             if (responseHook && !responseHook(user, response)) {
-                throw new ResponseHookError();
+                throw responseHookError();
             }
 
             return response;
