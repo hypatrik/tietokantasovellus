@@ -10,7 +10,9 @@ export const newUserSchema= object({
 export interface NewUser extends Asserts<typeof newUserSchema> {}
 
 export interface User extends NewUser {
-    userId: number;
+    id: number;
     roles?: Role[];
     active: boolean;
+    createdAt: number;
+    modifiedAt: number,
 }

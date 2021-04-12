@@ -1,6 +1,6 @@
 import { AuthenticatedUser } from 'core/AuthenticatedUser';
 import { UnauthorizedError } from 'core/errors';
-import { MockUserResource } from './MockUserResource';
+import { MockUserRepository } from '../repositories/user/MockUserRepository';
 import { UserService } from './UserService';
 
 const TEPPO_EMAIL = 'teppo@example.com';
@@ -11,7 +11,7 @@ describe('UserService', () => {
 
         beforeEach(() => {
             userService = new UserService(
-                new MockUserResource(),
+                new MockUserRepository(),
                 new AuthenticatedUser(
                     1,
                     TEPPO_EMAIL,

@@ -1,4 +1,7 @@
-export interface UnauthorizedErrorConstructor extends ErrorConstructor {
-    new(message?: string): UnauthorizedError;
+import { HttpError } from './HttpError';
+
+export class UnauthorizedError extends HttpError {
+    public constructor () {
+        super('Unauthorized', 401)
+    }
 }
-export class UnauthorizedError extends Error {}

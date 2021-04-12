@@ -1,1 +1,2 @@
-export * from './IUserResource';
+export * from './IUserRepository';
+export * from './ICarRepository';

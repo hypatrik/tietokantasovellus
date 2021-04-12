@@ -1,12 +1,12 @@
 import { User } from '@drivery/shared';
 import { AuthenticatedUser } from 'core/AuthenticatedUser';
 import { UnauthorizedError } from 'core/errors';
-import { IUserResource } from 'core/intefaces/IUserResource';
+import { IUserRepository } from 'core/intefaces/IUserRepository';
 import { protectedMethod } from 'core/protectedMethod';
 
 export class UserService {
     constructor (
-        private userResource: IUserResource,
+        private userResource: IUserRepository,
         protected user: AuthenticatedUser,
     ) {}
 
