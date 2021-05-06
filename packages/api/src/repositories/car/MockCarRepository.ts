@@ -1,7 +1,6 @@
 import { Car, EnergyType, Refuel } from '@drivery/shared';
 import { NotFoundError } from 'core/errors';
 import { ICarRepository } from 'core/intefaces';
-import { IUserRepository } from 'core/intefaces/IUserRepository';
 import { mockUsers } from 'repositories/user/MockUserRepository';
 
 const enegryTypes: EnergyType[] = [
@@ -63,13 +62,17 @@ const mockRegisterIndex = {
 }
 
 export class MockCarRepository implements ICarRepository {
-    async get (id: number | string): Promise<Car> {
-        let car = mockCars[id] || mockRegisterIndex[id] || null;
+    async get (id: number | string, userId: number): Promise<Car> {
+        let car: Car = mockCars[id] || mockCars[mockRegisterIndex[id]] || null;
 
         if (!car) {
             throw new NotFoundError();
         }
-    
+
+        if (userId && !car.users.some(u => u.id === userId)) {
+            throw new NotFoundError();
+        }
+
         return car;
     }
 }

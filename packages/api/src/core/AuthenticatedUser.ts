@@ -1,4 +1,4 @@
-import { Role } from "@drivery/shared";
+import { Role, User } from "@drivery/shared";
 
 export class AuthenticatedUser {
     private _roles: Set<Role>;
@@ -17,6 +17,14 @@ export class AuthenticatedUser {
 
     public hasIdOrEmail(id: number | string): boolean {
         return this.email === id || this.userId === id;
+    }
+
+    static fromUser (user: User) {
+        return new AuthenticatedUser(
+            user.id,
+            user.email,
+            user.roles,
+        );
     }
 
 }
