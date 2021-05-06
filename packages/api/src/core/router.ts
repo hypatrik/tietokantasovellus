@@ -12,7 +12,6 @@ const addRoute = (method: HttpMehod, endpoint: string, cb: ApiEventHandler) => {
     routes[resoleApiPath(method, endpoint)] = cb;
 }
 
-
 const onRequest = <T extends Object = any>(method: HttpMehod, endpoint: string, event: ApiEvent, context: IApiContext): Promise<T> => {
     const cb = routes[resoleApiPath(method, endpoint)];
 
