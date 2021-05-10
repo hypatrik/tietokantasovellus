@@ -1,5 +1,5 @@
-import { Car, EnergyType, Refuel } from '@drivery/shared';
-import { NotFoundError } from 'core/errors';
+import { Car, EnergyType, NewCar, Refuel } from '@drivery/shared';
+import { BadRequestError, NotFoundError } from 'core/errors';
 import { ICarRepository } from 'core/intefaces';
 import { mockUsers } from 'repositories/user/MockUserRepository';
 
@@ -74,5 +74,28 @@ export class MockCarRepository implements ICarRepository {
         }
 
         return car;
+    }
+
+    async create (newCar: NewCar, userId: number): Promise<Car> {
+        const energyType = enegryTypes[newCar.energyTypeId];
+        const user = mockUsers[userId];
+
+        if (!energyType || !user) {
+            throw new BadRequestError();
+        }
+
+        const nextIndex = mockCars.length;
+        mockCars.push({
+            ...newCar,
+            id: nextIndex,
+            createdAt: Date.now(),
+            modifiedAt: Date.now(),
+            refuels: [],
+            users: [ user ],
+            owners: [ user ],
+            energyType,
+        });
+
+        return mockCars[nextIndex];
     }
 }

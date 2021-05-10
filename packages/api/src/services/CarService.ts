@@ -1,4 +1,6 @@
+import { NewCar, newCarSchema } from '@drivery/shared';
 import { AuthenticatedUser } from 'core/AuthenticatedUser';
+import { BadRequestError } from 'core/errors';
 import { ICarRepository } from 'core/intefaces';
 
 export class CarService {
@@ -7,11 +9,21 @@ export class CarService {
         private user: AuthenticatedUser,
     ) {}
 
-    get(id: number | string) {
+    async get(id: number | string) {
         if (this.user.hasRole('admin')) {
             return this.carRepository.get(id);
         }
 
         return this.carRepository.get(id, this.user.userId);
+    }
+
+    async create (newCar: NewCar) {
+        const validatedCar = await newCarSchema.validate(newCar, {
+            stripUnknown: true,
+        }).catch(() => {
+            throw new BadRequestError();
+        });
+
+        return this.carRepository.create(validatedCar, this.user.userId);
     }
 }

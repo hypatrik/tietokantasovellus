@@ -2,11 +2,11 @@
     "name": "@drivery/shared",
     "version": "0.0.1",
     "private": true,
-    "main": "build/index.js",
-    "module": "build/index.js",
+    "main": "build/cjs/index.js",
+    "module": "build/esm/index.js",
     "scripts": {
-        "libbuild": "tsc --build",
-        "watchlib": "tsc --build --watch"
+        "libbuild": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+        "watchlib": "tsc -p tsconfig.esm.json --build --watch"
     },
     "devDependencies": {
         "typescript": "^4.1.2"
