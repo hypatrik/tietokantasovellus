@@ -196,49 +196,52 @@ test('create car existing register number', async () => {
     )).rejects.toThrow(ForbiddenError);
 });
 
-// test('update car', async () => {
-//     const { id } = await router.onRequest<Car>(
-//         'POST',
-//         '/api/car',
-//         {
-//             pathParams: {},
-//             searchParams: {},
-//             body: {
-//                 register: 'MOD-200',
-//                 energyTypeId: 1,
-//                 name: 'Modify'
-//             }
-//         },
-//         new MockApiContext(createMockUser(3))
-//     );
+test('update car', async () => {
+    const { id } = await router.onRequest<Car>(
+        'POST',
+        '/api/car',
+        {
+            pathParams: {},
+            searchParams: {},
+            body: {
+                register: 'MOD-200',
+                energyTypeId: 1,
+                name: 'Modify'
+            }
+        },
+        new MockApiContext(createMockUser(3))
+    );
 
-//     const car = await router.onRequest<Car>(
-//         'PUT',
-//         '/api/car/:id',
-//         {
-//             pathParams: {
-//                 id: id.toString(),
-//             },
-//             searchParams: {},
-//             body: {
-//                 name: 'Modified'
-//             }
-//         },
-//         new MockApiContext(createMockUser(3))
-//     );
+    const modifiedCar = await router.onRequest<Car>(
+        'PATCH',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: id.toString(),
+            },
+            searchParams: {},
+            body: {
+                name: 'Modified'
+            }
+        },
+        new MockApiContext(createMockUser(3))
+    );
 
-//     const fromPersitance = await router.onRequest<Car>(
-//         'GET',
-//         '/api/car/:id',
-//         {
-//             pathParams: {
-//                 id: id.toString(),
-//             },
-//             searchParams: {},
-//         },
-//         new MockApiContext(createMockUser(3))
-//     );
+    expect(modifiedCar.id).toBe(id);
+    expect(modifiedCar.name).toBe('Modified');
 
-//     expect(fromPersitance.id).toBe(car.id);
-//     expect(fromPersitance.name).toBe('Modified');
-// });
+    const fromPersitance = await router.onRequest<Car>(
+        'GET',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: id.toString(),
+            },
+            searchParams: {},
+        },
+        new MockApiContext(createMockUser(3))
+    );
+
+    expect(fromPersitance.id).toBe(id);
+    expect(fromPersitance.name).toBe('Modified');
+});

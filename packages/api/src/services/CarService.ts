@@ -1,7 +1,8 @@
-import { NewCar, newCarSchema } from '@drivery/shared';
+import { NewCar, newCarSchema, UpdateCar, updateCarSchema } from '@drivery/shared';
 import { AuthenticatedUser } from 'core/AuthenticatedUser';
 import { BadRequestError } from 'core/errors';
 import { ICarRepository } from 'core/intefaces';
+import cleanDeep from 'clean-deep';
 
 export class CarService {
     constructor (
@@ -18,14 +19,34 @@ export class CarService {
     }
 
     async create (newCar: NewCar) {
+        let validatedCar: NewCar;
+
         try {
-            const validatedCar = await newCarSchema.validate(newCar, {
+            validatedCar = await newCarSchema.validate(newCar, {
                 stripUnknown: true,
             });
-
-            return this.carRepository.create(validatedCar, this.user.userId);
         } catch (error) {
             throw new BadRequestError();
         }
+
+        return this.carRepository.create(validatedCar, this.user.userId);
+    }
+
+    async update (id: number | string, updateCar: UpdateCar) {
+        let validatedCar: UpdateCar;
+
+        try {
+            validatedCar = await updateCarSchema.validate(cleanDeep(updateCar), {
+                stripUnknown: true,
+            });
+        } catch (error) {
+            throw new BadRequestError();
+        }
+
+        if (!Object.keys(validatedCar).length) {
+            throw new BadRequestError();
+        }
+
+        return this.carRepository.update(id, validatedCar, this.user.userId);
     }
 }

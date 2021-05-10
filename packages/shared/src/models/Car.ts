@@ -3,7 +3,7 @@ import { EnergyType } from './EnergyType';
 import { Refuel } from './Refuel';
 import { User } from './User';
 
-export const newCarSchema= object({
+export const newCarSchema = object({
     register: string().required(),
     name: string().required(),
     energyTypeId: number().required(),
@@ -11,8 +11,16 @@ export const newCarSchema= object({
 
 export interface NewCar extends Asserts<typeof newCarSchema> {}
 
-export interface Car extends Omit<NewCar, 'energyTypeId'> {
+export const updateCarSchema = object({
+    name: string(),
+});
+
+export interface UpdateCar extends Asserts<typeof updateCarSchema> {}
+
+export interface Car {
     id: number;
+    name: string;
+    register: string;
     energyType: EnergyType;
     refuels: Refuel[];
     owners: User[];

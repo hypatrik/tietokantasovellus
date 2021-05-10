@@ -7,3 +7,7 @@ router.get('/api/car/:id', (event, context) => {
 router.post('/api/car', (event, context) => {
     return context.carService.create(event.body);
 });
+
+router.patch('/api/car/:id', (event, context) => {
+    return context.carService.update(event.pathParams.id, event.body);
+});

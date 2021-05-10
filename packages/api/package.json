@@ -8,7 +8,9 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "clean-deep": "^3.4.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/preset-env": "^7.14.1",

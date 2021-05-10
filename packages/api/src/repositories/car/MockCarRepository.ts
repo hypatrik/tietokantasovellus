@@ -1,4 +1,4 @@
-import { Car, EnergyType, NewCar, Refuel } from '@drivery/shared';
+import { Car, EnergyType, NewCar, Refuel, UpdateCar } from '@drivery/shared';
 import { BadRequestError, NotFoundError } from 'core/errors';
 import { ForbiddenError } from 'core/errors/ForbiddenError';
 import { ICarRepository } from 'core/intefaces';
@@ -102,5 +102,16 @@ export class MockCarRepository implements ICarRepository {
         });
 
         return mockCars[nextIndex];
+    }
+
+    async update (id: string | number, updateCar: UpdateCar, userId: number) {
+        const car = await this.get(id, userId);
+
+        mockCars[id] = {
+            ...car,
+            ...updateCar,
+        };
+
+        return mockCars[id];
     }
 }
