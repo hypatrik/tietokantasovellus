@@ -18,12 +18,14 @@ export class CarService {
     }
 
     async create (newCar: NewCar) {
-        const validatedCar = await newCarSchema.validate(newCar, {
-            stripUnknown: true,
-        }).catch(() => {
-            throw new BadRequestError();
-        });
+        try {
+            const validatedCar = await newCarSchema.validate(newCar, {
+                stripUnknown: true,
+            });
 
-        return this.carRepository.create(validatedCar, this.user.userId);
+            return this.carRepository.create(validatedCar, this.user.userId);
+        } catch (error) {
+            throw new BadRequestError();
+        }
     }
 }

@@ -1,7 +1,7 @@
 import { Car } from '@drivery/shared';
 import { router } from 'core';
 import { MockApiContext } from 'core/apiContext/MockApiContext';
-import { NotFoundError } from 'core/errors';
+import { BadRequestError, NotFoundError } from 'core/errors';
 import { createMockUser } from 'core/testUtils';
 
 import './car';
@@ -13,6 +13,23 @@ test('get own car by id', async () => {
         {
             pathParams: {
                 id: '1',
+            },
+            searchParams: {},
+        },
+        new MockApiContext(createMockUser(1))
+    );
+
+    expect(car.id).toBe(1);
+});
+
+
+test('get own car by id as register-number', async () => {
+    const car = await router.onRequest<Car>(
+        'GET',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: 'abc-123',
             },
             searchParams: {},
         },
@@ -103,3 +120,60 @@ test('create car', async () => {
     expect(fromPersitance.id).toBe(car.id);
 });
 
+test('create car missing data', async () => {
+    expect(router.onRequest<Car>(
+        'POST',
+        '/api/car',
+        {
+            pathParams: {},
+            searchParams: {},
+            body: {
+                register: 'DNE-404'
+            }
+        },
+        new MockApiContext(createMockUser(3))
+    )).rejects.toThrow(BadRequestError);
+
+    expect(router.onRequest<Car>(
+        'GET',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: 'DNE-404',
+            },
+            searchParams: {},
+        },
+        new MockApiContext(createMockUser(3))
+    )).rejects.toThrow(NotFoundError);
+
+});
+
+test('create car non existing enery type', async () => {
+    expect(router.onRequest<Car>(
+        'POST',
+        '/api/car',
+        {
+            pathParams: {},
+            searchParams: {},
+            body: {
+                register: 'DNE-404',
+                energyTypeId: 9000,
+                name: 'Foo'
+            }
+        },
+        new MockApiContext(createMockUser(3))
+    )).rejects.toThrow(BadRequestError);
+
+    expect(router.onRequest<Car>(
+        'GET',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: 'DNE-404',
+            },
+            searchParams: {},
+        },
+        new MockApiContext(createMockUser(3))
+    )).rejects.toThrow(NotFoundError);
+
+});
