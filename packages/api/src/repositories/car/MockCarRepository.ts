@@ -4,63 +4,72 @@ import { ForbiddenError } from 'core/errors/ForbiddenError';
 import { ICarRepository } from 'core/intefaces';
 import { mockUsers } from 'repositories/user/MockUserRepository';
 
-const enegryTypes: EnergyType[] = [
-    null,
-    {
-        id: 1,
-        name: 'Petrol',
-    },
-    {
-        id: 2,
-        name: 'Diesel',
-    },
-    {
-        id: 3,
-        name: 'Gas',
-    },
-];
+let enegryTypes: EnergyType[] = [];
+let reFuels: Refuel[] = []
+let mockCars: Car[] = [];
+let mockRegisterIndex: Record<string, number> = {};
 
-const reFuels: Refuel[] = [
-    null,
-    {
-        id: 1,
-        trip: 120099,
-        units: 1039,
-        pricePerUnit: 1509,
-        user: mockUsers[1],
-        coordinates: {
-            latitude: 60.2036,
-            longitude: 24.8732,
+export const resetCarsMock = () => {
+    enegryTypes = [
+        null,
+        {
+            id: 1,
+            name: 'Petrol',
         },
-        createdAt: 1618231797417,
+        {
+            id: 2,
+            name: 'Diesel',
+        },
+        {
+            id: 3,
+            name: 'Gas',
+        },
+    ];
+    
+    reFuels = [
+        null,
+        {
+            id: 1,
+            trip: 120099,
+            units: 1039,
+            pricePerUnit: 1509,
+            user: mockUsers[1],
+            coordinates: {
+                latitude: 60.2036,
+                longitude: 24.8732,
+            },
+            createdAt: 1618231797417,
+        }
+    ]
+    
+    mockCars = [
+        null,
+        {
+            id: 1,
+            name: 'Volvo',
+            register: 'abc-123',
+            energyType: enegryTypes[2],
+            owners: [
+                mockUsers[1]
+            ],
+            users: [
+                mockUsers[1],
+                mockUsers[2],
+            ],
+            refuels: [
+                reFuels[1],
+            ],
+            createdAt: 1618231797417,
+            modifiedAt: 1618231797417,
+        },
+    ];
+    
+    mockRegisterIndex = {
+        'abc-123': 1,
     }
-]
-
-const mockCars: Car[] = [
-    null,
-    {
-        id: 1,
-        name: 'Volvo',
-        register: 'abc-123',
-        energyType: enegryTypes[2],
-        owners: [
-            mockUsers[1]
-        ],
-        users: [
-            mockUsers[1],
-            mockUsers[2],
-        ],
-        refuels: [
-            reFuels[1],
-        ],
-        createdAt: 1618231797417,
-        modifiedAt: 1618231797417,
-    },
-];
-
-const mockRegisterIndex = {
-    'abc-123': 1,
 }
+
+resetCarsMock();
 
 export class MockCarRepository implements ICarRepository {
     async get (id: number | string, userId: number): Promise<Car> {

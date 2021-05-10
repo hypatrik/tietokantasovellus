@@ -4,8 +4,13 @@ import { MockApiContext } from 'core/apiContext/MockApiContext';
 import { BadRequestError, NotFoundError } from 'core/errors';
 import { ForbiddenError } from 'core/errors/ForbiddenError';
 import { createMockUser } from 'core/testUtils';
+import { resetCarsMock } from 'repositories/car/MockCarRepository';
 
 import './car';
+
+beforeEach(() => {
+    resetCarsMock();
+})
 
 test('get own car by id', async () => {
     const car = await router.onRequest<Car>(
@@ -244,4 +249,130 @@ test('update car', async () => {
 
     expect(fromPersitance.id).toBe(id);
     expect(fromPersitance.name).toBe('Modified');
+});
+
+
+test('update car non existing car', async () => {
+    expect(router.onRequest<Car>(
+        'PATCH',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: 'DNE-200',
+            },
+            searchParams: {},
+            body: {
+                name: 'Modified'
+            }
+        },
+        new MockApiContext(createMockUser(3)))
+    ).rejects.toThrow(NotFoundError);
+});
+
+test('update car some elses car', async () => {
+    expect(router.onRequest<Car>(
+        'PATCH',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: '1',
+            },
+            searchParams: {},
+            body: {
+                name: 'Modified'
+            }
+        },
+        new MockApiContext(createMockUser(3)))
+    ).rejects.toThrow(NotFoundError);
+});
+
+
+test('update car with empty payload', async () => {
+    expect(router.onRequest<Car>(
+        'PATCH',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: '1',
+            },
+            searchParams: {},
+            body: {}
+        },
+        new MockApiContext(createMockUser(3)))
+    ).rejects.toThrow(BadRequestError);
+});
+
+test('update car with invalid payload', async () => {
+    expect(router.onRequest<Car>(
+        'PATCH',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: '1',
+            },
+            searchParams: {},
+            body: {
+                name: true,
+            }
+        },
+        new MockApiContext(createMockUser(3)))
+    ).rejects.toThrow(BadRequestError);
+});
+
+test('update car with extra fields', async () => {
+
+    const { id, energyType, register } = await router.onRequest<Car>(
+        'POST',
+        '/api/car',
+        {
+            pathParams: {},
+            searchParams: {},
+            body: {
+                register: 'MOD-200',
+                energyTypeId: 1,
+                name: 'Modify'
+            }
+        },
+        new MockApiContext(createMockUser(3))
+    );
+    
+    const modifiedCar = await router.onRequest<Car>(
+        'PATCH',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: id.toString(),
+            },
+            searchParams: {},
+            body: {
+                name: 'Modified',
+                register: 'MOD-300',
+                energyTypeId: 2,
+                id: 42,
+            }
+        },
+        new MockApiContext(createMockUser(3))
+    );
+    
+    expect(modifiedCar.id).toBe(id);
+    expect(modifiedCar.name).toBe('Modified');
+    expect(modifiedCar.energyType).toBe(energyType);
+    expect(modifiedCar.register).toBe(register);
+    
+    const fromPersitance = await router.onRequest<Car>(
+        'GET',
+        '/api/car/:id',
+        {
+            pathParams: {
+                id: id.toString(),
+            },
+            searchParams: {},
+        },
+        new MockApiContext(createMockUser(3))
+    );
+    
+    expect(fromPersitance.id).toBe(id);
+    expect(fromPersitance.name).toBe('Modified');
+    expect(fromPersitance.energyType).toBe(energyType);
+    expect(fromPersitance.register).toBe(register);
 });
