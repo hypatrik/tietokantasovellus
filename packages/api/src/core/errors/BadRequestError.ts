@@ -1,7 +1,7 @@
 import { HttpError } from './HttpError';
 
 export class BadRequestError extends HttpError {
-    public constructor () {
-        super('Bad request', 400)
+    public constructor (message = 'Bad request') {
+        super(message, 400)
     }
 }

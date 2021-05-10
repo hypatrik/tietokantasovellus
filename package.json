@@ -6,8 +6,9 @@
       "story": "lerna run story --stream",
       "prestart": "lerna run libbuild --stream",
       "start": "lerna run start --stream",
-      "pretest": "lerna run libbuild --stream",
+      "pretest": "lerna run libbuild:test --stream",
       "test": "lerna run test --stream",
+      "libbuild:test": "lerna run libbuild:test",
       "libbuild": "lerna run libbuild"
     },
     "devDependencies": {

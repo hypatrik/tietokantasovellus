@@ -1,4 +1,5 @@
 export * from './NotFoundError';
 export * from './MissingRoleError';
 export * from './UnauthroizedError';
-export * from './BadRequest';
+export * from './BadRequestError';
+export * from './ForbiddenError';

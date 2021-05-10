@@ -6,6 +6,7 @@
     "module": "build/esm/index.js",
     "scripts": {
         "libbuild": "tsc -p tsconfig.cjs.json && tsc -p tsconfig.esm.json",
+        "libbuild:test": "tsc -p tsconfig.cjs.json",
         "watchlib": "tsc -p tsconfig.esm.json --build --watch"
     },
     "devDependencies": {

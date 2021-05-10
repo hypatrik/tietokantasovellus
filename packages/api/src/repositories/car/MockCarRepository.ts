@@ -1,5 +1,6 @@
 import { Car, EnergyType, NewCar, Refuel } from '@drivery/shared';
 import { BadRequestError, NotFoundError } from 'core/errors';
+import { ForbiddenError } from 'core/errors/ForbiddenError';
 import { ICarRepository } from 'core/intefaces';
 import { mockUsers } from 'repositories/user/MockUserRepository';
 
@@ -80,8 +81,12 @@ export class MockCarRepository implements ICarRepository {
         const energyType = enegryTypes[newCar.energyTypeId];
         const user = mockUsers[userId];
 
-        if (!energyType || !user) {
-            throw new BadRequestError();
+        if (mockRegisterIndex[newCar.register]) {
+            throw new ForbiddenError('Register number already exists');
+        }
+
+        if (!energyType) {
+            throw new BadRequestError('Invalid energy type');
         }
 
         const nextIndex = mockCars.length;
