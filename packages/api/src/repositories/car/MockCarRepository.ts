@@ -1,11 +1,10 @@
-import { Car, EnergyType, NewCar, Refuel, UpdateCar } from '@drivery/shared';
+import { Car, EnergyType, NewCar, UpdateCar } from '@drivery/shared';
 import { BadRequestError, NotFoundError } from 'core/errors';
 import { ForbiddenError } from 'core/errors/ForbiddenError';
 import { ICarRepository } from 'core/intefaces';
 import { mockUsers } from 'repositories/user/MockUserRepository';
 
 let enegryTypes: EnergyType[] = [];
-let reFuels: Refuel[] = []
 let mockCars: Car[] = [];
 let mockRegisterIndex: Record<string, number> = {};
 
@@ -26,21 +25,6 @@ export const resetCarsMock = () => {
         },
     ];
     
-    reFuels = [
-        null,
-        {
-            id: 1,
-            trip: 120099,
-            units: 1039,
-            pricePerUnit: 1509,
-            user: mockUsers[1],
-            coordinates: {
-                latitude: 60.2036,
-                longitude: 24.8732,
-            },
-            createdAt: 1618231797417,
-        }
-    ]
     
     mockCars = [
         null,
@@ -55,9 +39,6 @@ export const resetCarsMock = () => {
             users: [
                 mockUsers[1],
                 mockUsers[2],
-            ],
-            refuels: [
-                reFuels[1],
             ],
             createdAt: 1618231797417,
             modifiedAt: 1618231797417,
@@ -109,6 +90,8 @@ export class MockCarRepository implements ICarRepository {
             owners: [ user ],
             energyType,
         });
+
+        mockRegisterIndex[mockCars[nextIndex].register] = nextIndex;
 
         return mockCars[nextIndex];
     }

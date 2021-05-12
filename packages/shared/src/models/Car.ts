@@ -1,6 +1,5 @@
 import { object, string, number, Asserts } from 'yup';
 import { EnergyType } from './EnergyType';
-import { Refuel } from './Refuel';
 import { User } from './User';
 
 export const newCarSchema = object({
@@ -22,7 +21,6 @@ export interface Car {
     name: string;
     register: string;
     energyType: EnergyType;
-    refuels: Refuel[];
     owners: User[];
     users: User[];
     createdAt: number;
